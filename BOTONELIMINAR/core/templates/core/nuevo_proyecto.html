@@ -1,0 +1,123 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+
+<style>
+    .form-container {
+        max-width: 1000px;
+        margin:  10px auto;
+        padding: 20px;
+        background-color: #f9f9f9;
+        border-radius: 10px;
+        box-shadow: 0 0px 0px rgba(0, 0, 0, 0.1);
+    }
+
+    .form-container .form-label {
+        font-weight: bold;
+        margin-bottom: 10px;
+        display: block;
+    }
+
+    .palabra {
+        font-size: 25px; /* Cambia el tamaño del texto */
+        font-weight: bold; /* Hace el texto en negrita */
+        color: #000000; /* Cambia el color del texto */
+        text-align: center; /* Centra el texto */
+        margin-bottom: 0px; /* Añade un espacio debajo del texto */
+    }
+  
+  
+</style>
+
+<div class="form-container">
+    <form action="{% url 'agregar_proyecto' %}" method="post">
+        {% csrf_token %}
+        <div class="palabra">Registro de Produccion Diaria</div>
+
+
+        <div class="mb-3">
+            <label for="id_producto" class="form-label">Producto</label>
+            <select id="id_producto" name="producto" class="form-select" >
+                <option value="">Seleccione un producto</option>
+                {% for producto in productos %}
+                    <option value="{{ producto.id }}">{{ producto.nombre }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label for="litros_producido" class="form-label">Ingrese Litros Producidos</label>
+            <input type="number" class="form-control" id="litros_producido" name="litros_producido" required>
+        </div>
+
+        <div class="mb-3">
+            <label for="fecha_produccion" class="form-label">Ingrese fecha de produccion</label>
+            <input type="date" class="form-control" id="fecha_produccion" name="fecha_produccion" required>
+        </div>
+
+        <div class="mb-3">
+            <label for="turno" class="form-label">Ingrese el turno</label>
+            <select class="form-select" aria-label="Default select example" id="turno" name="turno" required>
+                <option value="" selected>Opciones</option>
+                <option value="AM">Mañana</option>
+                <option value="PM">Tarde</option>
+                <option value="MM">Noche</option> 
+            </select>
+        </div>
+
+        
+       
+
+        <div class="mb-3">
+            <label for="id_operador" class="form-label">Operador</label>
+            <input type="text" id="id_operador" name="operador" class="form-control" value="{{ user.get_username }}" >
+        </div>
+
+      
+    
+        
+        <button class="btn btn-primary" type="submit">Enviar</button>
+    </form>
+</div>
+
+
+
+{%block body %}
+<div class="row">
+    <div class="col-sm-12 col-md-6 col-lg-4 col-xl-4">
+
+
+    </div>
+    ><div class="col-sm-12 col-md-6 col-lg-8 col-xl-8">
+        <div class="table-reponsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>producto</th>
+                        <th>litros</th>
+                        <th>fecha</th>
+                        <th>turno</th>
+                        <th>operador</th>
+                        <th colspan="2">Opciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {%for c in productos%}
+                    <tr>
+                        <td>{{c.producto}}</td>
+                        <td>{{c.Litros_producido}}</td>
+                        <td>{{c.fecha_produccion}}</td>
+                        <td>{{c.turno}}</td>
+                        <td>{{c.operador.username}}</td>
+                        <td><a href="edicionProducto/{{c.producto}}" class=" btn btn-info">Editar</a></td>
+                        <td><a href="{% url 'eliminar_produccion' c.id %}" class="btn btn-danger">Eliminar</a></td>
+                    </tr>
+                    
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div> 
+    </div>
+
+{% endblock %}
+{%endblock%}
